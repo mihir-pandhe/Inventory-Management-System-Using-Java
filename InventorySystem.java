@@ -6,6 +6,7 @@ public class InventorySystem {
     private Scanner scanner;
     private static final String FILE_NAME = "inventory.dat";
     private Stack<String> undoStack;
+
     public InventorySystem() {
         items = new HashMap<>();
         scanner = new Scanner(System.in);
@@ -26,8 +27,10 @@ public class InventorySystem {
             String name = scanner.nextLine();
             System.out.println("Enter Quantity:");
             int quantity = scanner.nextInt();
+            validateQuantity(quantity);
             System.out.println("Enter Price (in Rupees):");
             double price = scanner.nextDouble();
+            validatePrice(price);
             items.put(id, new InventoryItem(id, name, quantity, price));
             System.out.println("Item added successfully.");
             saveItems();
@@ -49,8 +52,10 @@ public class InventorySystem {
             }
             System.out.println("Enter new Quantity:");
             int quantity = scanner.nextInt();
+            validateQuantity(quantity);
             System.out.println("Enter new Price (in Rupees):");
             double price = scanner.nextDouble();
+            validatePrice(price);
             InventoryItem item = items.get(id);
             item.setQuantity(quantity);
             item.setPrice(price);
@@ -208,6 +213,18 @@ public class InventorySystem {
         System.out.println("Total value of inventory: " + totalValue + "/-");
     }
 
+    private void validateQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative.");
+        }
+    }
+
+    private void validatePrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Price cannot be negative.");
+        }
+    }
+
     private void saveItems() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
             oos.writeObject(items);
@@ -241,13 +258,13 @@ public class InventorySystem {
         switch (action) {
             case "ADD":
                 items.remove(id);
-                System.out.println("Undo: Removed item with ID " + id);
+                System.out.println("Undo Add Operation. Item removed.");
                 break;
             case "UPDATE":
-                System.out.println("Undo: Update not supported fully.");
+                System.out.println("Undo Update Operation: Previous values not supported.");
                 break;
             case "REMOVE":
-                System.out.println("Undo: Restore not supported fully.");
+                System.out.println("Undo Remove Operation: Restore not supported fully.");
                 break;
             default:
                 System.out.println("Unknown action for undo.");
