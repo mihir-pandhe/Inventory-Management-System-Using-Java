@@ -89,6 +89,17 @@ public class InventorySystem {
         }
     }
 
+    public void searchItem() {
+        System.out.println("Enter Item ID to search:");
+        int id = scanner.nextInt();
+        InventoryItem item = items.get(id);
+        if (item != null) {
+            System.out.println(item);
+        } else {
+            System.out.println("Item with ID " + id + " not found.");
+        }
+    }
+
     private void saveItems() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
             oos.writeObject(items);
@@ -118,7 +129,8 @@ public class InventorySystem {
             System.out.println("2. Update Item");
             System.out.println("3. Remove Item");
             System.out.println("4. Display Items");
-            System.out.println("5. Exit");
+            System.out.println("5. Search Item");
+            System.out.println("6. Exit");
             System.out.print("Enter your choice: ");
             try {
                 choice = scanner.nextInt();
@@ -136,6 +148,9 @@ public class InventorySystem {
                         system.displayItems();
                         break;
                     case 5:
+                        system.searchItem();
+                        break;
+                    case 6:
                         System.out.println("Exiting...");
                         break;
                     default:
@@ -146,7 +161,7 @@ public class InventorySystem {
                 scanner.nextLine();
                 choice = 0;
             }
-        } while (choice != 5);
+        } while (choice != 6);
         scanner.close();
     }
 }
